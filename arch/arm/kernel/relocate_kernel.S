@@ -5,8 +5,9 @@
 #include <asm/assembler.h>
 #include <asm/kexec.h>
 
-	.globl relocate_new_kernel
-relocate_new_kernel:
+	.align	3	/* not needed for this code, but keeps fncpy() happy */
+
+ENTRY(relocate_new_kernel)
 
 	ldr	r0,kexec_indirection_page
 	ldr	r1,kexec_start_address
@@ -79,6 +80,8 @@ kexec_mach_type:
 	.globl kexec_boot_atags
 kexec_boot_atags:
 	.long	0x0
+
+ENDPROC(relocate_new_kernel)
 
 relocate_new_kernel_end:
 
