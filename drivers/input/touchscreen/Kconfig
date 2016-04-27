@@ -1094,6 +1094,13 @@ config TOUCHSCREEN_TOUCHX
 	  To compile this driver as a module, choose M here: the
 	  module will be called touchx.
 
+	  
+config TOUCHSCREEN_DOUBLETAP2WAKE
+	tristate "DoubleTap2Wake for touchscreens"
+	default y
+    help
+      Say Y here to support doubletap2wake
+
 config SWEEP2SLEEP
         tristate "Sweep to put device to sleep"
         default y
