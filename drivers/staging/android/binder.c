@@ -670,6 +670,7 @@ static int binder_update_page_range(struct binder_proc *proc, int allocate,
 		}
 		/* vm_insert_page does not seem to increment the refcount */
 	}
+	preempt_disable();
 	if (mm) {
 		up_write(&mm->mmap_sem);
 		mmput(mm);
@@ -695,6 +696,7 @@ err_alloc_page_failed:
 		;
 	}
 err_no_vma:
+	preempt_disable();
 	if (mm) {
 		up_write(&mm->mmap_sem);
 		mmput(mm);
@@ -1762,7 +1764,6 @@ static void binder_transaction(struct binder_proc *proc,
 	list_add_tail(&tcomplete->entry, &thread->todo);
 	if (target_wait) {
 		if (reply || !(t->flags & TF_ONE_WAY)) {
-			preempt_disable();
 			wake_up_interruptible_sync(target_wait);
 			sched_preempt_enable_no_resched();
 		} else {
@@ -2830,7 +2831,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			ret = -EINVAL;
 			goto err;
 		}
-		if (copy_from_user(&peer, ubuf, sizeof(peer))) {
+		if (copy_from_user_preempt_disabled(&peer, ubuf, sizeof(peer))) {
 			ret = -EFAULT;
 			goto err;
 		}
@@ -2845,7 +2846,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			if (t && t->from == thrd)
 				peer.remote = t->to_proc ? t->to_proc->pid : 0;
 		}
-		if (copy_to_user(ubuf, &peer, sizeof(peer))) {
+		if (copy_to_user_preempt_disabled(ubuf, &peer, sizeof(peer))) {
 			ret = -EFAULT;
 			goto err;
 		}
