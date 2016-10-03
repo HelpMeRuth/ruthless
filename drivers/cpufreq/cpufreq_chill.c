@@ -344,13 +344,14 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 
 	if (input >= 5)
 		input = 5;
-
-	if (input = 0)
-		input = 0;
+        else
+                input = 0;
 
 	cs_tuners->boost_count = input;
 	return count;
+
 }
+
 
 show_store_one(cs, sampling_rate);
 show_store_one(cs, up_threshold);
