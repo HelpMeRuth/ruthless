@@ -8,16 +8,17 @@ set -e
 
 ## Copy this script inside the kernel directory
 KERNEL_DIR=$PWD
-KERNEL_TOOLCHAIN=/home/shivam/linaro/bin/arm-linux-androideabi-
+KERNEL_TOOLCHAIN=/home/ruthger/android/arm-eabi-5.x/bin/arm-eabi-
 KERNEL_DEFCONFIG=osprey_defconfig
 DTBTOOL=$KERNEL_DIR/Dtbtool/
-JOBS=8
+JOBS=2
+DATE=$(date)
 ANY_KERNEL2_DIR=$KERNEL_DIR/Anykernel2/
-FINAL_KERNEL_ZIP=Optimus-R15-Osprey.zip
+FINAL_KERNEL_ZIP=Ruthless-$DATE.zip
 
 # Clean build always lol
-echo "**** Cleaning ****"
-make clean && make mrproper
+#echo "**** Cleaning ****"
+#make clean && make mrproper
 
 # The MAIN Part
 echo "**** Setting Toolchain ****"
@@ -55,8 +56,8 @@ cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $ANY_KERNEL2_DIR/modules/
 echo "**** Time to zip up! ****"
 cd $ANY_KERNEL2_DIR/
 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
-rm -rf /home/shivam/$FINAL_KERNEL_ZIP
-cp /home/shivam/optimus/Anykernel2/$FINAL_KERNEL_ZIP /home/shivam/$FINAL_KERNEL_ZIP
+rm -rf /home/ruthger/$FINAL_KERNEL_ZIP
+cp /home/ruthger/v3/Anykernel2/$FINAL_KERNEL_ZIP /home/ruthger/$FINAL_KERNEL_ZIP
 
 echo "**** Good Bye!! ****"
 cd $KERNEL_DIR
