@@ -475,7 +475,7 @@ static void wakeup_source_activate(struct wakeup_source *ws)
 		(!enable_msm_hsic_ws &&
 		    !strcmp(ws->name, "msm_hsic_host")) ||
 		(!enable_bluedroid_timer_ws &&
-			!strcmp(ws->name, "bluedroid_timer")))))) {
+			!strcmp(ws->name, "bluedroid_timer")))) {
 		/*
 		 * let's try and deactivate this wakeup source since the user
 		 * clearly doesn't want it. The user is responsible for any
