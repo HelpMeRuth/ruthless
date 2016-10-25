@@ -12,13 +12,13 @@ KERNEL_TOOLCHAIN=/home/ruthger/android/arm-eabi-5.x/bin/arm-eabi-
 KERNEL_DEFCONFIG=osprey_defconfig
 DTBTOOL=$KERNEL_DIR/Dtbtool/
 JOBS=2
-DATE=$(date)
 ANY_KERNEL2_DIR=$KERNEL_DIR/Anykernel2/
-FINAL_KERNEL_ZIP=Ruthless-$DATE.zip
-
-# Clean build always lol
-#echo "**** Cleaning ****"
-#make clean && make mrproper
+VERSION=3
+echo "**** Setting Build Number ****"
+NUMBER=$(cat number)
+INCREMENT=$(expr $NUMBER + 1)
+sed -i s/$NUMBER/$INCREMENT/g $KERNEL_DIR/number
+FINAL_KERNEL_ZIP=Ruthless-build$INCREMENT-R$VERSION.zip
 
 # The MAIN Part
 echo "**** Setting Toolchain ****"
@@ -26,7 +26,7 @@ export CROSS_COMPILE=$KERNEL_TOOLCHAIN
 export ARCH=arm
 echo "**** Kernel defconfig is set to $KERNEL_DEFCONFIG ****"
 make $KERNEL_DEFCONFIG
-make -j$JOBS
+make CONFIG_NO_ERROR_ON_MISMATCH=y CONFIG_DEBUG_SECTION_MISMATCH=y -j$JOBS
 
 # Time for dtb
 echo "**** Generating DT.IMG ****"
@@ -44,7 +44,7 @@ echo "**** Removing leftovers ****"
 rm -rf $ANY_KERNEL2_DIR/dtb
 rm -rf $ANY_KERNEL2_DIR/zImage
 rm -rf $ANY_KERNEL2_DIR/modules/wlan.ko
-rm -rf $ANY_KERNEL2_DIR/$FINAL_KERNEL_ZIP
+rm -rf $ANY_KERNEL2_DIR/*.zip
 
 echo "**** Copying zImage ****"
 cp $KERNEL_DIR/arch/arm/boot/zImage $ANY_KERNEL2_DIR/
@@ -57,10 +57,8 @@ echo "**** Time to zip up! ****"
 cd $ANY_KERNEL2_DIR/
 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
 rm -rf /home/ruthger/$FINAL_KERNEL_ZIP
-cp /home/ruthger/v3/Anykernel2/$FINAL_KERNEL_ZIP /home/ruthger/$FINAL_KERNEL_ZIP
+mkdir /home/$USER/Builds
+cp $KERNEL_DIR/Anykernel2/$FINAL_KERNEL_ZIP /home/$USER/Builds/$FINAL_KERNEL_ZIP
 
 echo "**** Good Bye!! ****"
 cd $KERNEL_DIR
-rm -rf arch/arm/boot/dtb
-rm -rf $ANY_KERNEL2_DIR/$FINAL_KERNEL_ZIP
-git checkout -- Anykernel2/zImage
