@@ -56,8 +56,6 @@ cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $ANY_KERNEL2_DIR/modules/
 echo "**** Time to zip up! ****"
 cd $ANY_KERNEL2_DIR/
 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
-rm -rf /home/ruthger/$FINAL_KERNEL_ZIP
-mkdir /home/$USER/Builds
 cp $KERNEL_DIR/Anykernel2/$FINAL_KERNEL_ZIP /home/$USER/Builds/$FINAL_KERNEL_ZIP
 
 echo "**** Good Bye!! ****"
