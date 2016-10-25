@@ -18,16 +18,16 @@
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
-#define CHILL_VERSION_MINOR			(3)
+#define CHILL_VERSION_MINOR			(5)
 
 /* Chill governor macros */
-#define DEF_FREQUENCY_UP_THRESHOLD		(85)
-#define DEF_FREQUENCY_DOWN_THRESHOLD		(35)
+#define DEF_FREQUENCY_UP_THRESHOLD		(80)
+#define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
 #define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(45)
-#define DEF_FREQUENCY_STEP			(5)
+#define DEF_FREQUENCY_STEP			(1)
 #define DEF_SAMPLING_RATE			(20000)
-#define DEF_BOOST_ENABLED			(1)
-#define DEF_BOOST_COUNT				(8)
+#define DEF_BOOST_ENABLED			(0)
+#define DEF_BOOST_COUNT				(3)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
@@ -84,6 +84,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (policy->cur == policy->min)
 			return;
 
+		/* reduce boost count with frequency */
+		if (boost_counter < 0)
+			boost_counter--;
+
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
@@ -127,15 +131,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count) {
 			dbs_info->requested_freq = policy->max;
 			boost_counter = 0;
-		} else
+		} else {
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
-
- 		/* Make sure max hasn't been reached, otherwise increment boost_counter */
-		if (dbs_info->requested_freq >= policy->max) {
-			dbs_info->requested_freq = policy->max;
-			boost_counter = 0;
-		} else
 			boost_counter++;
+		};
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 			CPUFREQ_RELATION_H);
@@ -344,14 +343,12 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 
 	if (input >= 5)
 		input = 5;
-        else
-                input = 0;
+        if (input = 0)
+		input = 0;
 
 	cs_tuners->boost_count = input;
 	return count;
-
 }
-
 
 show_store_one(cs, sampling_rate);
 show_store_one(cs, up_threshold);
@@ -498,4 +495,3 @@ fs_initcall(cpufreq_gov_dbs_init);
 module_init(cpufreq_gov_dbs_init);
 #endif
 module_exit(cpufreq_gov_dbs_exit);
-
