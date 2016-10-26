@@ -31,16 +31,9 @@ mkdir -p /tmp/anykernel;
 cd /tmp/anykernel;
 unzip -o "$ZIP";
 
-ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
-ui_print "**********************************";
-ui_print "Optimus Kernel by Flashhhh";
-ui_print "Optimizing.... ";
-ui_print "**********************************";
 /sbin/busybox mount /system;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
-  ui_print "Checking device...";
-  ui_print " ";
   for i in 1 2 3 4 5; do
     testname="$(file_getprop /tmp/anykernel/anykernel.sh device.name$i)";
     if [ "$(getprop ro.product.device)" == "$testname" -o "$(getprop ro.build.product)" == "$testname" ]; then
@@ -60,7 +53,6 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.initd)" == 1 ]; then
   set_perm_recursive 0 0 0755 0755 /system/etc/init.d;
 fi;
 
-ui_print "Installing kernel...";
 /sbin/sh /tmp/anykernel/anykernel.sh $2;
 if [ $? != "0" ]; then
   umount /system;
@@ -68,8 +60,6 @@ if [ $? != "0" ]; then
 fi;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
-  ui_print "Pushing modules...";
-  ui_print " ";
   cp -f /tmp/anykernel/modules/* /system/lib/modules/;
   set_perm_recursive 0 0 0755 0644 /system/lib/modules;
 fi;
@@ -79,6 +69,13 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
 fi;
 
 umount /system;
-ui_print " ";
-ui_print "Done!";
+ui_print "#------------------------------------#";
+ui_print "# Developed by HelpMeRuth            #";
+ui_print "# Tested by AcidFire.TM              #";
+ui_print "# Based on Optimus by Flashhh        #";
+ui_print "#------------------------------------#";
+ui_print "# Android Compatible Version : 6 & 7 #";
+ui_print "# Linux version : 3.10.49            #";
+ui_print "# Ruthless version : R3              #";
+ui_print "#------------------------------------#";
 

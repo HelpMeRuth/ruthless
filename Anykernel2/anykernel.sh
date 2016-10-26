@@ -3,7 +3,7 @@
 
 ## AnyKernel setup
 # EDIFY properties
-kernel.string=Flashhhh@ xda-developers
+kernel.string=HelpMeRuth && AcidFire.TM
 do.devicecheck=1
 do.initd=0
 do.modules=1
