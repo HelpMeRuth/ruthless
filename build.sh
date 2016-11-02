@@ -58,7 +58,7 @@ echo "**** Removing leftovers ****"
 rm -rf $ANY_KERNEL2_DIR/dtb
 rm -rf $ANY_KERNEL2_DIR/zImage
 rm -rf $ANY_KERNEL2_DIR/modules/wlan.ko
-### just get rid of every zip, who want a zip in a zip?
+### just get rid of every zip, who wants a zip in a zip?
 rm -rf $ANY_KERNEL2_DIR/*.zip
 
 echo "**** Copying zImage ****"
@@ -92,7 +92,7 @@ zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
 cd ..
 cd ..
 echo $FINAL_KERNEL_ZIP
-cp RuthlessKernel/Anykernel2/$FINAL_KERNEL_ZIP Builds/$FINAL_KERNEL_ZIP
+cp $KERNEL_DIR/Anykernel2/$FINAL_KERNEL_ZIP Builds/$FINAL_KERNEL_ZIP
 
 echo "**** Good Bye!! ****"
-cd RuthlessKernel
+cd $KERNEL_DIR
