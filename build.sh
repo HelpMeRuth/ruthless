@@ -8,10 +8,9 @@
 
 set -e
 
-## Copy this script inside the kernel directory
 KERNEL_DIR=$PWD
-TOOLCHAINDIR=/home/$USER/Toolchain/
-## Place your toolchain in /Toolchain dir.
+TOOLCHAINDIR=../Toolchain
+## Place your toolchain in ../Toolchain dir.
 if [ ! -d $TOOLCHAINDIR ]
 then
 echo "**** Making /Toolchain directory ****"
@@ -25,17 +24,17 @@ else
 echo "**** /Toolchain present ****"
 echo " "
 fi
-TC=$(ls /home/$USER/Toolchain/)
+TC=$(ls ../Toolchain/)
 KERNEL_TOOLCHAIN=$TOOLCHAINDIR/$TC/bin/arm-eabi-
 KERNEL_DEFCONFIG=osprey_defconfig
 DTBTOOL=$KERNEL_DIR/Dtbtool/
-BUILDS=/home/$USER/Builds
+BUILDS=../Builds
 JOBS=2
 ANY_KERNEL2_DIR=$KERNEL_DIR/Anykernel2/
 VERSION=4
 
 # The MAIN Part
-echo "**** Setting Toolchain ****"
+echo "**** Toolchain set to $TC ****"
 echo " "
 export CROSS_COMPILE=$KERNEL_TOOLCHAIN
 export ARCH=arm
@@ -90,7 +89,10 @@ fi
 echo "**** Time to zip up! ****"
 cd $ANY_KERNEL2_DIR/
 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
-cp $ANY_KERNEL2_DIR/$FINAL_KERNEL_ZIP $BUILDS/$FINAL_KERNEL_ZIP
+cd ..
+cd ..
+echo $FINAL_KERNEL_ZIP
+cp RuthlessKernel/Anykernel2/$FINAL_KERNEL_ZIP Builds/$FINAL_KERNEL_ZIP
 
 echo "**** Good Bye!! ****"
-cd $KERNEL_DIR
+cd RuthlessKernel
