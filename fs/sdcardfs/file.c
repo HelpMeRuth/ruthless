@@ -91,7 +91,7 @@ static int sdcardfs_readdir(struct file *file, void *dirent, filldir_t filldir)
 	lower_file = sdcardfs_lower_file(file);
 
 	lower_file->f_pos = file->f_pos;
-	err = vfs_readdir(lower_file, filldir, dirent);
+	err = iterate_dir(lower_file, dirent);
 	file->f_pos = lower_file->f_pos;
 	if (err >= 0)		/* copy the atime */
 		fsstack_copy_attr_atime(dentry->d_inode,
