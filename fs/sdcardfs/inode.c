@@ -592,7 +592,7 @@ static int sdcardfs_permission(struct inode *inode, int mask)
 	struct inode *top = SDCARDFS_I(inode)->top;
 
 	/* Ensure owner is up to date */
-	if (from_kuid(&init_user_ns, inode->i_uid) != from_kuid(&init_user_ns, top->i_uid)) {
+	if (inode->i_uid != top->i_uid) {
 		SDCARDFS_I(inode)->d_uid = SDCARDFS_I(top)->d_uid;
 		fix_derived_permission(inode);
 	}
@@ -631,6 +631,24 @@ static int sdcardfs_permission(struct inode *inode, int mask)
 
 }
 
+static void sdcardfs_fillattr(struct inode *inode, struct kstat *stat)
+{
+	struct sdcardfs_inode_info *info = SDCARDFS_I(inode);
+	stat->dev = inode->i_sb->s_dev;
+	stat->ino = inode->i_ino;
+	stat->mode = (inode->i_mode  & S_IFMT) | get_mode(SDCARDFS_I(info->top));
+	stat->nlink = inode->i_nlink;
+	stat->uid = SDCARDFS_I(info->top)->d_uid;
+	stat->gid = get_gid(SDCARDFS_I(info->top));
+	stat->rdev = inode->i_rdev;
+	stat->size = i_size_read(inode);
+	stat->atime = inode->i_atime;
+	stat->mtime = inode->i_mtime;
+	stat->ctime = inode->i_ctime;
+	stat->blksize = (1 << inode->i_blkbits);
+	stat->blocks = inode->i_blocks;
+}
+
 static int sdcardfs_getattr(struct vfsmount *mnt, struct dentry *dentry,
 		 struct kstat *stat)
 {
@@ -660,8 +678,7 @@ static int sdcardfs_getattr(struct vfsmount *mnt, struct dentry *dentry,
 	sdcardfs_copy_and_fix_attrs(inode, lower_inode);
 	fsstack_copy_inode_size(inode, lower_inode);
 
-
-	generic_fillattr(inode, stat);
+	sdcardfs_fillattr(inode, stat);
 	sdcardfs_put_lower_path(dentry, &lower_path);
 	return 0;
 }

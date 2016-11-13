@@ -365,7 +365,9 @@ int inet_diag_dump_one_icsk(struct inet_hashinfo *hashinfo,
 	if (IS_ERR(sk))
 		return PTR_ERR(sk);
 
-	rep = nlmsg_new(inet_sk_attr_size(), GFP_KERNEL);
+	rep = nlmsg_new(sizeof(struct inet_diag_msg) +
+			sizeof(struct inet_diag_meminfo) +
+			sizeof(struct tcp_info) + 64, GFP_KERNEL);
 	if (!rep) {
 		err = -ENOMEM;
 		goto out;
