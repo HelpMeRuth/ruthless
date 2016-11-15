@@ -6,7 +6,6 @@ bb=/sbin/bb/busybox;
 # Set TCP westwood
 echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
 
-# Set IOSched
-echo "bfq" > /sys/block/mmcblk0/queue/scheduler
-echo "512" > /sys/block/mmcblk0/bdi/read_ahead_kb
-
+# Apply fq pie packet sched
+tc qdisc add dev wlan0 root fq_pie
+tc qdisc add dev rmnet_data0 root fq_pie
