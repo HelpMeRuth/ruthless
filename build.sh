@@ -31,7 +31,7 @@ DTBTOOL=$KERNEL_DIR/Dtbtool/
 BUILDS=../Builds
 JOBS=2
 ANY_KERNEL2_DIR=$KERNEL_DIR/Anykernel2
-VERSION=4
+VERSION=5
 
 # The MAIN Part
 echo "**** Toolchain set to $TC ****"
